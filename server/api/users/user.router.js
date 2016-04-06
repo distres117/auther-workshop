@@ -16,6 +16,7 @@ router.param('id', function (req, res, next, id) {
 	.then(null, next);
 });
 
+
 router.get('/', function (req, res, next) {
 	User.find({}).exec()
 	.then(function (users) {

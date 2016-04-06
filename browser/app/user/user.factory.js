@@ -57,3 +57,25 @@ app.factory('User', function ($http, Story) {
 
 	return User;
 });
+
+app.factory('AuthFactory', function($http, $state){
+	var fac = {};
+
+	fac.doLogin = function(user){
+		console.log(user);
+    $http.post('/login', user).then(function(){
+      $state.go('stories');
+    })
+    .catch(function(err){
+      console.log(err);
+    });
+	};
+
+	fac.doSignup = function(user){
+		$http.post('/signup', user).then(function(){
+      $state.go('stories');
+    });
+	};
+
+	return fac;
+});
