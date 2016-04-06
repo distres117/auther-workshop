@@ -28,7 +28,13 @@ var User = new mongoose.Schema({
 	isAdmin: {
 		type: Boolean,
 		default: false
-	}
+	},
+	google: {
+        id: String,
+        token: String,
+        name: String,
+        email: String
+    }
 });
 
 User.methods.getStories = function () {

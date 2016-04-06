@@ -60,22 +60,46 @@ app.factory('User', function ($http, Story) {
 
 app.factory('AuthFactory', function($http, $state){
 	var fac = {};
+	var currentUser = null;
+	
+	function apiGetUser(){
+		$http.get('/auth/me').then(function(res){
+			if (res.data){
+				currentUser = res.data;
+			}	
+		});
+	}
 
 	fac.doLogin = function(user){
 		console.log(user);
-    $http.post('/login', user).then(function(){
-      $state.go('stories');
-    })
-    .catch(function(err){
-      console.log(err);
-    });
+    	$http.post('/login', user).then(function(){
+    		currentUser = user;
+      		$state.go('stories');
+    	})
+    	.catch(function(err){
+      		console.log(err);
+    	});
 	};
 
 	fac.doSignup = function(user){
 		$http.post('/signup', user).then(function(){
-      $state.go('stories');
-    });
+			currentUser = user;
+      		$state.go('stories');
+    	});
 	};
+	
+	fac.doSignout = function(){
+		$http.post('/signout').then(function(){
+			currentUser = null;
+			$state.go('login');
+		});	
+	};
+	
+	fac.getCurrentUser = function(){
+		return currentUser;
+	}
+	
+	apiGetUser();
 
 	return fac;
 });

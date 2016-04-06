@@ -3,6 +3,7 @@
 var app = require('express')();
 var path = require('path');
 var User = require('../api/users/user.model');
+var passport = require('passport');
 
 app.use(require('./logging.middleware'));
 
@@ -10,12 +11,16 @@ app.use(require('./requestState.middleware'));
 
 app.use(require('./statics.middleware'));
 
+
 app.use('/api', require('../api/api.router'));
 var session = require('express-session');
 app.use(session({
     // this mandatory configuration ensures that session IDs are not predictable
     secret: 'tongiscool' // or whatever you like
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.post('/login', function (req, res, next) {
@@ -34,6 +39,16 @@ app.post('/signup', function(req,res,next){
 		req.session.userId = user._id;
 		res.sendStatus(200);
 	}, next);
+});
+
+app.post('/signout', function(req,res,next){
+	delete req.session['userId'];
+	req.session.destroy();
+	res.sendStatus(200);
+});
+
+app.get('/auth/me', function(req,res,next){
+	res.json(req.session.userId);
 });
 
 // app.use(function (req, res, next) {

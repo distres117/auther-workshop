@@ -17,6 +17,7 @@
     "lodash": "^3.10.1",
     "mongoose": "^4.1.10",
     "morgan": "^1.6.1",
+    "passport": "^0.3.2",
     "shortid": "^2.2.2"
   },
   "devDependencies": {

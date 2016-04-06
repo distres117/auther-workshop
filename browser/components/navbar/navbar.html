@@ -9,15 +9,15 @@
 			<a class="navbar-brand" href="/"><img src="logo.png"></a>
 		</div>
 
-		<div class="collapse navbar-collapse">
+		<div class="collapse navbar-collapse" ng-controller="AuthCtrl">
 			<ul class="nav navbar-nav">
-				<li ng-class="{active: pathStartsWithStatePath('users')}"><a ui-sref="users">users</a></li>
-				<li ng-class="{active: pathStartsWithStatePath('stories')}"><a ui-sref="stories">stories</a></li>
+				<li ng-class="{active: pathStartsWithStatePath('users')}" ng-show="getCurrentUser()" ><a ui-sref="users">users</a></li>
+				<li ng-class="{active: pathStartsWithStatePath('stories')}" ng-show="getCurrentUser()"><a ui-sref="stories">stories</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li ui-sref-active="active"><a ui-sref="signup">signup</a></li>
-				<li ui-sref-active="active"><a ui-sref="login">login</a></li>
-				<li><button class="navbar-btn btn btn-default">logout</button></li>
+				<li ui-sref-active="active"><a ui-sref="signup" ng-hide="getCurrentUser()">signup</a></li>
+				<li ui-sref-active="active"><a ui-sref="login" ng-hide="getCurrentUser()">login</a></li>
+				<li><button class="navbar-btn btn btn-default" ng-show="getCurrentUser()" ng-click="doSignout()">logout</button></li>
 			</ul>
 		</div>
 	</div>
