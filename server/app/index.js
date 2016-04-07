@@ -1,9 +1,11 @@
-'use strict';
+
 
 var app = require('express')();
 var path = require('path');
 var User = require('../api/users/user.model');
 var passport = require('passport');
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(require('./logging.middleware'));
 
@@ -13,14 +15,14 @@ app.use(require('./statics.middleware'));
 
 
 app.use('/api', require('../api/api.router'));
+app.use('/auth', require('../api/auth.routes'));
 var session = require('express-session');
 app.use(session({
     // this mandatory configuration ensures that session IDs are not predictable
     secret: 'tongiscool' // or whatever you like
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 
 app.post('/login', function (req, res, next) {
@@ -47,9 +49,8 @@ app.post('/signout', function(req,res,next){
 	res.sendStatus(200);
 });
 
-app.get('/auth/me', function(req,res,next){
-	res.json(req.session.userId);
-});
+
+
 
 // app.use(function (req, res, next) {
 //     console.log('session', req.session);

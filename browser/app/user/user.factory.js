@@ -1,4 +1,4 @@
-'use strict';
+
 
 app.factory('User', function ($http, Story) {
 	function User (props) {
@@ -12,7 +12,7 @@ app.factory('User', function ($http, Story) {
 	};
 
 	User.prototype.isNew = function () {
-		return !this._id
+		return !this._id;
 	};
 
 	User.prototype.fetch = function () {
@@ -61,12 +61,12 @@ app.factory('User', function ($http, Story) {
 app.factory('AuthFactory', function($http, $state){
 	var fac = {};
 	var currentUser = null;
-	
+
 	function apiGetUser(){
 		$http.get('/auth/me').then(function(res){
 			if (res.data){
 				currentUser = res.data;
-			}	
+			}
 		});
 	}
 
@@ -87,18 +87,18 @@ app.factory('AuthFactory', function($http, $state){
       		$state.go('stories');
     	});
 	};
-	
+
 	fac.doSignout = function(){
 		$http.post('/signout').then(function(){
 			currentUser = null;
 			$state.go('login');
-		});	
+		});
 	};
-	
+
 	fac.getCurrentUser = function(){
 		return currentUser;
-	}
-	
+	};
+
 	apiGetUser();
 
 	return fac;
