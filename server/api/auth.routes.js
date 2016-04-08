@@ -3,16 +3,6 @@ var router = require('express').Router(),
   GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
   User = require('../api/users/user.model.js');
 
-  router.get('/me', function(req,res,next){
-      res.json(req.user._id || req.session.userId);
-  });
-
-  router.get('/google', passport.authenticate('google', {scope: 'email'}));
-
-  router.get('/google/callback', passport.authenticate('google', {
-    successRedirect: '/',
-    failureRedirect: '/'
-  }));
 
 passport.use(
   new GoogleStrategy({
@@ -26,8 +16,7 @@ passport.use(
     /*
 
     */
-    User.findOne({ 'google.id' : profile.id }, function (err, user) {
-    // if there is an error, stop everything and return that
+    User.findOne({ 'google.id' : profile.id }, function (err, user) {    // if there is an error, stop everything and return that
     // ie an error connecting to the database
     if (err) return done(err);
     // if the user is found, then log them in
@@ -47,7 +36,9 @@ passport.use(
       newUser.photo = profile.photos[0].value; // nice to have
       // save our user to the database
       newUser.save(function (err) {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         // if successful, pass along the new user
         else done(null, newUser);
       });
@@ -55,12 +46,30 @@ passport.use(
 });
   })
 );
+
+passport.deserializeUser(function (id, done) {
+  console.log('deserializeUser', id);
+  User.findById(id, done);
+});
 passport.serializeUser(function (user, done) {
+  console.log("serializeUser", user._id);
   done(null, user._id);
 });
 
-passport.deserializeUser(function (id, done) {
-  User.findById(id, done);
+
+
+router.get('/google', passport.authenticate('google', {scope: 'email'}));
+
+router.get('/google/callback', passport.authenticate('google', {
+  successRedirect: '/stories',
+  failureRedirect: '/'
+}));
+
+router.get('/me', function(req,res,next){
+  console.log('req.user', req.user);
+    if (req.user)
+      req.session.userId = req.user._id;
+    res.json(req.session.userId);
 });
 
 

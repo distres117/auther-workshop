@@ -4,6 +4,12 @@ var app = require('express')();
 var path = require('path');
 var User = require('../api/users/user.model');
 var passport = require('passport');
+var session = require('express-session');
+app.use(session({
+    // this mandatory configuration ensures that session IDs are not predictable
+    secret: 'tongiscool' // or whatever you like
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -16,17 +22,11 @@ app.use(require('./statics.middleware'));
 
 app.use('/api', require('../api/api.router'));
 app.use('/auth', require('../api/auth.routes'));
-var session = require('express-session');
-app.use(session({
-    // this mandatory configuration ensures that session IDs are not predictable
-    secret: 'tongiscool' // or whatever you like
-}));
 
 
 
 
 app.post('/login', function (req, res, next) {
-    console.log(req.body.email)
 		User.findOne({email: req.body.email, password: req.body.password})
     .then(function (user) {
 			if (!user)

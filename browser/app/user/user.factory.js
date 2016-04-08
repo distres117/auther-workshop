@@ -65,6 +65,7 @@ app.factory('AuthFactory', function($http, $state){
 	function apiGetUser(){
 		$http.get('/auth/me').then(function(res){
 			if (res.data){
+				console.log(res.data);
 				currentUser = res.data;
 			}
 		});
